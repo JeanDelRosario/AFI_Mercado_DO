@@ -1,1 +1,4 @@
-# AFI_Mercado_DO
+
+# Dominican AFI: Interest and information Tracker
+
+### User stories :

@@ -1,0 +1,46 @@
+/****** Main Styling ******/
+
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 16px;
+	color: #222;
+	background-color: #FaFaFa;
+	text-align: center;
+}
+
+.container {
+	padding: 0;
+	margin-top: 40px;
+}
+
+/* the 'body' selector is required for the tests to pass */
+/* You can change the style attributes if you want */
+body {
+  background-color: #222;
+  color: #ddd;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+h1 {
+  font-size: 2em;
+  text-align: center;
+}
+
+#data {
+  margin: 0 auto;
+  width: 670px;
+  display: grid;
+  grid-template-columns: repeat(6, 100px);
+  grid-column-gap: 5px;
+  justify-items: center;
+}
+
+.table-header {
+  text-align: center;
+  cursor: pointer;
+}
+
+.table-text {
+  text-align: center;
+}
