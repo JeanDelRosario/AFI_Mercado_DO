@@ -2,14 +2,14 @@
 // where your node app starts
 
 // init project
+require('dotenv').config();
 var express = require('express');
 const cors = require('cors');
 var app = express();
-var mongoClient = require('mongodb').MongoClient;
+const db = require('./db');
 var AFI;
 
-
-
+db.query('SELECT * FROM AFI_MERCADO;')
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
@@ -21,15 +21,15 @@ app.get("/", function (req, res) {
 
 // API endpoint... 
 app.get("/json", cors(),function(req, res) {
-  mongoClient.connect(process.env.MONGO_URI, { useNewUrlParser: true } ,function(err, con) {
-  
-  con.db('AFI').collection('MercadoLast').find({}).toArray(function(err, data){
-    res.json(data);
+  db.query('SELECT * FROM AFI_MERCADO WHERE "FECHA" = (SELECT MAX("FECHA") FROM AFI_MERCADO)', (err, data) => {
+    if (err) {
+      console.log(err)
+    }
+    res.send(data.rows)
   })
-});
 });
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
+var listener = app.listen(3000, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });

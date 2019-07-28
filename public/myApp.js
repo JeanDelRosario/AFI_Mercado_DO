@@ -1,4 +1,4 @@
-const URL = "https://afi.glitch.me/json";
+const URL = "/json";
 let AFIData;
 
 const loadData = (data) => {
@@ -25,11 +25,22 @@ const getDataAPI = (sort = 'DIAS_30') => {
         console.log(error);
       })
      .then((data) => {
-    
-    data.sort((a,b) => b[sort] - a[sort]);
-    AFIData = data;
-    loadData(data);
-  }
+        console.log(data)
+        data = data.map((valueArray) => {
+          return {
+            AFI: valueArray["AFI"],
+            FONDO: valueArray["FONDO"],
+            DIAS_30: valueArray["DIAS_30"],
+            DIAS_90: valueArray["DIAS_90"],
+            DIAS_180: valueArray["DIAS_180"],
+            DIAS_360: valueArray["DIAS_360"]
+          }
+      })
+      console.log(data)
+      data.sort((a,b) => b[sort] - a[sort]);
+      AFIData = data;
+      loadData(data);
+    }
   )
 }
 
