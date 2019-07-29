@@ -25,7 +25,6 @@ const getDataAPI = (sort = 'DIAS_30') => {
         console.log(error);
       })
      .then((data) => {
-        console.log(data)
         data = data.map((valueArray) => {
           return {
             AFI: valueArray["AFI"],
@@ -36,9 +35,8 @@ const getDataAPI = (sort = 'DIAS_30') => {
             DIAS_360: valueArray["DIAS_360"]
           }
       })
-      console.log(data)
       data.sort((a,b) => b[sort] - a[sort]);
-      AFIData = data;
+      AFIData = JSON.parse(JSON.stringify(data));
       loadData(data);
     }
   )
@@ -67,5 +65,5 @@ const sortDataHelper = (column) => {
 const sortData = (event) => {
   remove();
   sortDataHelper(list[event.target.id]);
-  loadData(AFIData);
+  loadData(JSON.parse(JSON.stringify(AFIData)));
 }
