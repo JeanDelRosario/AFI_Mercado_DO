@@ -9,7 +9,7 @@ const loadData = (data) => {
         } 
         let node = document.createElement("p");
         node.className = "table-text";
-        item[key] = typeof item[key] == "number" ? Math.floor(item[key] * 100) / 100 : item[key];
+        item[key] = typeof item[key] == "number" ? Math.floor(item[key] * 10000)/100 + '%' : item[key];
 
         let textnode = document.createTextNode(item[key]);
         node.appendChild(textnode);
