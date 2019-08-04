@@ -1,7 +1,5 @@
 const apiDataDay = "/json";
 
-let AFIData :[];
-
 interface afiDbInfo {
   "AFI": string;
   "FONDO": string;
@@ -28,14 +26,37 @@ const list : listOfColumns = {
   "Tasa-180-Dias" : "DIAS_180",
   "Tasa-360-Dias" : "DIAS_360"
  };
+ 
+const sortDataHelper = (column : string) : void => {
+  /**
+   * Sorts AFIData by column parameter.
+   */
+  AFIData.sort((a : afiDbInfo, b : afiDbInfo) : number => {
+    const c = b[column];
+    const d = a[column];
+    if((typeof c === 'number') && ((typeof d === "number"))) {
+      return c - d;
+    }else if(d){
+      return -1;
+    }else {
+      return 1;
+    }
+  });
+}
 
- const getDataAPI = (sort : string = 'DIAS_30') => {
+let AFIData : afiDbInfo[];
+
+const getDataAPI = (sort : string = 'DIAS_30') => {
+  /**
+   * Gets data from API, sorts it by sort column and displays it in HTML.
+   */
   fetch(apiDataDay, {cache: "no-store"})
      .then((resp) => resp.json())
      .catch(function(error) {
         console.log(error);
       })
      .then((data: afiDbInfo[]) : void => {
+       
         data = data.map((valueArray : afiDbInfo ) : afiDbInfo => {
           return {
             AFI: valueArray["AFI"],
@@ -45,20 +66,12 @@ const list : listOfColumns = {
             DIAS_180: valueArray["DIAS_180"],
             DIAS_360: valueArray["DIAS_360"]
           }
-      })
+        })
+        AFIData = JSON.parse(JSON.stringify(data));
 
-      data.sort((a, b) => {
-        const c = b[sort];
-        const d = a[sort];
-        if((typeof c === 'number') && ((typeof d === "number"))) {
-          return c - d;
-        }else {
-          return -1;
-        }
-      });
-      
-      AFIData = JSON.parse(JSON.stringify(data));
-      loadData(data);
+        sortDataHelper(sort);
+        
+        loadData(AFIData);
     }
   )
 }
@@ -76,7 +89,7 @@ const loadData = (data : afiDbInfo[]) => {
         node.className = "table-text";
         interest = typeof interest === "number" ? Math.floor(interest * 10000)/100 + '%' : interest;
 
-        let textnode = document.createTextNode(interest ? interest : 'null');
+        let textnode = document.createTextNode(interest ? interest : 'N/A');
         node.appendChild(textnode);
 
         document.getElementById("data")!.appendChild(node);
@@ -90,14 +103,11 @@ const remove = () : void => {
   removeElements( Array.from(document.querySelectorAll(".table-text")) );
 }
 
-const sortDataHelper = (column : string) => {
-  AFIData.sort((a, b) => b[column] - a[column]);
-}
-
 const sortData = (event : Event) : void => {
   remove();
   const target = event.target as HTMLElement;
-  sortDataHelper(list[target.id]);
+  const columnToSort = list[target.id];
+  sortDataHelper(columnToSort);
   loadData(JSON.parse(JSON.stringify(AFIData)));
 }
 
