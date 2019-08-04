@@ -1,4 +1,6 @@
 
 # Dominican AFI: Interest and information Tracker
 
-### User stories :
+Made with JS, Node and PostgreSQL
+
+Added TypeScript into the mix.
