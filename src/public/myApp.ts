@@ -26,12 +26,18 @@ const list : listOfColumns = {
   "Tasa-180-Dias" : "DIAS_180",
   "Tasa-360-Dias" : "DIAS_360"
  };
- 
-const sortDataHelper = (column : string) : void => {
+
+let AFIData : afiDbInfo[];
+
+const deepCloneArrayObjects = <T>(data: T[]) : T[] => {
+  return JSON.parse(JSON.stringify(data))
+}
+
+const sortDataHelper = (data : afiDbInfo[], column : string) : afiDbInfo[] => {
   /**
    * Sorts AFIData by column parameter.
    */
-  AFIData.sort((a : afiDbInfo, b : afiDbInfo) : number => {
+  const dataSorted = deepCloneArrayObjects(data).sort((a : afiDbInfo, b : afiDbInfo) : number => {
     const c = b[column];
     const d = a[column];
     if((typeof c === 'number') && ((typeof d === "number"))) {
@@ -42,13 +48,16 @@ const sortDataHelper = (column : string) : void => {
       return 1;
     }
   });
+
+  return dataSorted
 }
 
-let AFIData : afiDbInfo[];
+
 
 const getDataAPI = (sort : string = 'DIAS_30') => {
   /**
    * Gets data from API, sorts it by sort column and displays it in HTML.
+   * It modifies the global variable AFIData
    */
   fetch(apiDataDay, {cache: "no-store"})
      .then((resp) => resp.json())
@@ -69,7 +78,7 @@ const getDataAPI = (sort : string = 'DIAS_30') => {
         })
         AFIData = JSON.parse(JSON.stringify(data));
 
-        sortDataHelper(sort);
+        AFIData = sortDataHelper(AFIData, sort);
         
         loadData(AFIData);
     }
@@ -107,8 +116,8 @@ const sortData = (event : Event) : void => {
   remove();
   const target = event.target as HTMLElement;
   const columnToSort = list[target.id];
-  sortDataHelper(columnToSort);
-  loadData(JSON.parse(JSON.stringify(AFIData)));
+  const dataToDisplay = sortDataHelper(AFIData, columnToSort);
+  loadData(JSON.parse(JSON.stringify(dataToDisplay)));
 }
 
 getDataAPI();
